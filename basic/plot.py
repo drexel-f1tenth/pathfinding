@@ -55,10 +55,11 @@ print(selection)
 
 plt.rcParams.update({'font.size': 26})
 fig = plt.figure()
-plt.polar(
-  data['angle'], data['range'],
+ax = fig.add_subplot(111, projection='polar')
+ax.plot(
+  filtered['angle'], data['range'],
   linewidth=2.5)
-plt.polar(
+ax.plot(
   filtered['angle'], filtered['range'],
   linewidth=2.5)
 plt.polar(
