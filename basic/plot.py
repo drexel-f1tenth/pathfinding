@@ -31,23 +31,30 @@ data = pd.DataFrame(
 
 safety = 0.500 / 2.0
 
-# NOTE: if performance is a consideration, make the selection as soon as some `d` is found with filtered ranges remaining at `d`.
+ranges = [float(f) for f in data['range']]
+angles = [float(f) for f in data['angle']]
+filtered = [0.0] * len(ranges)
+for i in range(len(angles)):
+  # cap range to ensure distant points are filtered
+  r = ranges[i]
+  if r > 10: r = 10.0
+  t = np.arctan(safety / r)
 
-filtered = data.copy()
-for d in sorted({d for d in data['range']}, reverse=True):
-  for (_, row) in data[data['range'] == d].iterrows():
-    t, r = row['angle'], row['range']
-    dt = np.arctan(safety / r)
-    filt = ((t - dt) <= data['angle']) & (data['angle'] <= (t + dt))
-    neighbors = data[filt]
-    filtered.loc[filt, 'range'] = min(neighbors['range'])
+  d_idx = int(t / angle_bounds[2]) * 2
+  lower = max(0, i - d_idx)
+  upper = min(len(ranges), i + d_idx)
+  rs = [ranges[i] for i in range(lower, upper)]
+  if len(rs) == 0: continue
+  filtered[i] = min(rs)
+
+data['filtered'] = filtered
 
 # select the path with near max filtered range, closest to 0°
-max_filtered_range = filtered['range'].max()
+max_filtered_range = max(filtered)
 fudge_factor = 0.1
-paths = filtered[
-    ((max_filtered_range - fudge_factor) <= filtered['range']) &
-    (filtered['range'] <= (max_filtered_range + fudge_factor))]
+paths = data[
+    ((max_filtered_range - fudge_factor) <= data['filtered']) &
+    (data['filtered'] <= (max_filtered_range + fudge_factor))]
 selection = paths[paths['angle'].abs() == paths['angle'].abs().min()]
 print(selection)
 
@@ -57,12 +64,12 @@ plt.rcParams.update({'font.size': 26})
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='polar')
 ax.plot(
-  filtered['angle'], data['range'],
+  data['angle'], data['range'],
   linewidth=2.5)
 ax.plot(
-  filtered['angle'], filtered['range'],
+  data['angle'], data['filtered'],
   linewidth=2.5)
-plt.polar(
+ax.plot(
   [0.0, selection['angle'].iloc[0]], [0.0, selection['range'].iloc[0]],
   linewidth=5.0)
 
