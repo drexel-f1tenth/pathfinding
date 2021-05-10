@@ -33,16 +33,16 @@ safety = 0.500 / 2.0
 
 ranges = [float(f) for f in data['range']]
 angles = [float(f) for f in data['angle']]
-filtered = [0.0] * len(ranges)
+filtered = ranges.copy()
 for i in range(len(angles)):
   r = min(ranges[i], 10.0)
-  r = max(0.001, r - safety)
   t = np.arctan2(safety, r)
   d_idx = int(np.ceil(t / angle_bounds[2]))
-  print(r, d_idx, np.degrees(d_idx * angle_bounds[2]))
   lower = max(0, i - d_idx)
   upper = min(len(ranges), i + d_idx)
-  filtered[i] = min([ranges[i] for i in range(lower, upper)])
+  local_min = min([ranges[i] for i in range(lower, upper)])
+  for j in range(lower, upper):
+    if filtered[j] > local_min: filtered[j] = local_min
 
 data['filtered'] = filtered
 
