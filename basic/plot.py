@@ -35,11 +35,8 @@ ranges = [float(f) for f in data['range']]
 angles = [float(f) for f in data['angle']]
 filtered = [0.0] * len(ranges)
 for i in range(len(angles)):
-  # cap range to ensure distant points are filtered
-  r = ranges[i]
-  if r > 10: r = 10.0
-  t = np.arctan(safety / r)
-
+  r = min(ranges[i], 10.0)
+  t = np.arctan2(safety, r)
   d_idx = int(t / angle_bounds[2]) * 2
   lower = max(0, i - d_idx)
   upper = min(len(ranges), i + d_idx)
@@ -55,10 +52,11 @@ fudge_factor = 0.1
 paths = data[
     ((max_filtered_range - fudge_factor) <= data['filtered']) &
     (data['filtered'] <= (max_filtered_range + fudge_factor))]
+paths = data[
+    ((max_filtered_range - fudge_factor) <= data['filtered']) &
+    (data['filtered'] <= (max_filtered_range + fudge_factor))]
 selection = paths[paths['angle'].abs() == paths['angle'].abs().min()]
 print(selection)
-
-# TODO: stop if max filtered range is below some threshold, maybe TTC
 
 plt.rcParams.update({'font.size': 26})
 fig = plt.figure()
@@ -70,7 +68,7 @@ ax.plot(
   data['angle'], data['filtered'],
   linewidth=2.5)
 ax.plot(
-  [0.0, selection['angle'].iloc[0]], [0.0, selection['range'].iloc[0]],
+  [0.0, selection['angle'].iloc[0]], [0.0, selection['filtered'].iloc[0]],
   linewidth=5.0)
 
 axis = fig.axes[0]
