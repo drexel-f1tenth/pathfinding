@@ -36,13 +36,13 @@ angles = [float(f) for f in data['angle']]
 filtered = [0.0] * len(ranges)
 for i in range(len(angles)):
   r = min(ranges[i], 10.0)
+  r = max(0.001, r - safety)
   t = np.arctan2(safety, r)
-  d_idx = int(t / angle_bounds[2]) * 2
+  d_idx = int(np.ceil(t / angle_bounds[2]))
+  print(r, d_idx, np.degrees(d_idx * angle_bounds[2]))
   lower = max(0, i - d_idx)
   upper = min(len(ranges), i + d_idx)
-  rs = [ranges[i] for i in range(lower, upper)]
-  if len(rs) == 0: continue
-  filtered[i] = min(rs)
+  filtered[i] = min([ranges[i] for i in range(lower, upper)])
 
 data['filtered'] = filtered
 
