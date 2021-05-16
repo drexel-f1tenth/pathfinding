@@ -26,8 +26,9 @@ range_bounds = (
   float(raw_frame[12].removeprefix('range_max: ')))
 data = pd.DataFrame(
   { "angle": np.arange(*angle_bounds),
+    "intensity": np.asarray(json.loads(raw_frame[14].removeprefix('intensities: '))),
     "range": np.asarray(json.loads(raw_frame[13].removeprefix('ranges: '))),
-    "intensity": np.asarray(json.loads(raw_frame[14].removeprefix('intensities: ')))})
+  })
 
 safety = 0.500 / 2.0
 
