@@ -11,14 +11,14 @@ LiDAR test data and python scripts to test pathfinding algorithms
 
 - Scan0: Baseline with somewhat empty space ahead of the LiDAR
 <div align="center">
-  <image src="media/scan0-rear.jpg", style="width: 400px;">
-  <image src="media/scan0-top.jpg", style="width: 330px;">
+  <image src="media/scan0-rear.jpg", style="width: 50%;">
+  <image src="media/scan0-top.jpg", style="width: 41%;">
 </div>
 
 - Scan1: Nearly identical to Scan0, with a small obstacle approximately 1m ahead at 20° clockwise from center
 <div align="center">
-  <image src="media/scan1-rear.jpg", style="width: 370px;">
-  <image src="media/scan1-top.jpg", style="width: 370px;">
+  <image src="media/scan1-rear.jpg", style="width: 46%;">
+  <image src="media/scan1-top.jpg", style="width: 46%;">
 </div>
 
 ## Dependencies
@@ -38,6 +38,6 @@ Executing the basic algorithm on scan0: `./basic/plot.py testdata/scan0.txt`
 
 Output for scan0.txt (left) and scan1.txt (right)
 <div align="center">
-  <image src="basic/scan0.png", style="width: 400px; height: 400px; object-fit: cover;">
-  <image src="basic/scan1.png", style="width: 400px; height: 400px; object-fit: cover;">
+  <image src="basic/scan0.png", style="width: 40%;">
+  <image src="basic/scan1.png", style="width: 40%;">
 </div>
